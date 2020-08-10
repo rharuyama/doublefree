@@ -1,6 +1,6 @@
-# CとRustで二重freeをやろうとしたらそれぞれどうなるか
+# RustはCの二重free問題にどう対処しているか
 ## 概要
-C(gcc)では二重freeでコンパイルが通ってしまい，実行時にエラーが出るが，Rust(cargo)ではそもそもコンパイルの時点でエラーを出すことを確認しました．
+C(gcc)では二重freeを起こすコード`doublefree.c`でコンパイルが通ってしまい，実行時にエラーが出ます．Rust(cargo)では所有権の概念を導入することで，`main.rs`のようなコードではこの問題が解決されています．
 
 ## C
 コンパイル方法：
@@ -11,7 +11,7 @@ gcc -o doublefree doublefree.c
 ```
 ./doublefree
 ```
-コンパイルは通るが，実行時に次のようなエラーが出る．
+コンパイルは通るが，実行時に次のようなエラーが出ます．
 ```
 hello
 doublefree(2110,0x104375dc0) malloc: *** error for object 0x7fe494405750: pointer being freed was not allocated
@@ -25,7 +25,7 @@ zsh: abort      ./doublefree
 ```
 cargo build
 ```
-そもそもビルドの時点でエラーが出る．
+そもそもビルドの時点でエラーが出ます．
 ```
    Compiling doublefree v0.1.0 (/Users/ryoh/work/projects/doublefree)
 error[E0382]: borrow of moved value: `s1`
@@ -51,4 +51,4 @@ To learn more, run the command again with --verbose.
 ```
 cargo run
 ```
-エラーを除去するには，`main.rs`の`let _s2 = s1`をコメントし，`let _s2 = s1.clone()`のコメントを外してください．
+`String`は`Copy`を実装していない型のため，エラーを除去するにはデータのコピーを明示的にしなければなりません．`main.rs`の`let _s2 = s1`をコメントし，`let _s2 = s1.clone()`のコメントを外してください．
