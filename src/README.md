@@ -3,7 +3,11 @@
 ## C
 コンパイル方法：
 ```
-gcc -o doublefree doublefree.c && ./doublefree
+gcc -o doublefree doublefree.c 
+```
+実行方法：
+```
+./doublefree
 ```
 コンパイルは通るが，実行時に次のようなエラーが出る．
 ```
@@ -35,4 +39,8 @@ error[E0382]: borrow of moved value: `s1`
 
 error: aborting due to previous error; 1 warning emitted
 （略）
+```
+参考までに，実行方法は：
+```
+cargo run
 ```
